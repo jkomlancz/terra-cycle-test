@@ -2,6 +2,7 @@ require 'rubygems'
 require 'json'
 require_relative "githubclient"
 require_relative "commitfile"
+require_relative "commit"
 require_relative "pullrequest"
 
 puts "Welcome!"
@@ -11,9 +12,15 @@ ghc = GitHubClient.new "", ""
 
 pulls = ghc.get_pulls
 
-# objektumma alakitas
-pullrequests = pulls.map { |pull| PullRequest.new(pull['url'], pull['number'], pull['commits'], pull['files'])  }
+pullrequests = pulls.map { |pu| PullRequest.new(
+    pu['url'],
+    pu['number'],
+    pu['commits_url'],
+    # files
+    ghc.get_pull_files(pu['url']).map { |f| CommitFile.new(f['filename'], f['patch'], f['blob_url']) }
+    ) }
 
-puts pullrequests
+
+puts pullrequests[0].files[0].patches
 
 commitfile = CommitFile.new "valami", Array.new, Array.new

@@ -19,4 +19,14 @@ class GitHubClient
         return JSON.parse(response)
     end
 
+    def get_call( url )
+        response = RestClient.get url
+        return JSON.parse(response)
+    end
+
+    def get_pull_files( url )
+        url = url + "/files"
+        response = RestClient.get url
+        return JSON.parse(response)
+    end
 end
