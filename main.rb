@@ -10,9 +10,11 @@ puts "Welcome!"
 # TODO: Be lehetne kerni milyen repon szeretnenk futtatni
 ghc = GitHubClient.new "", ""
 
-pulls = ghc.get_pulls
+$pulls = ghc.get_pulls
 
-pullrequests = pulls.map { |pu| PullRequest.new(
+$all_modified_files = Array.new
+
+$pullrequests = $pulls.map { |pu| PullRequest.new(
     pu['url'],
     pu['number'],
     pu['commits_url'],
@@ -20,7 +22,14 @@ pullrequests = pulls.map { |pu| PullRequest.new(
     ghc.get_pull_files(pu['url']).map { |f| CommitFile.new(f['filename'], f['patch'], f['blob_url']) }
     ) }
 
+def gather_modified_files
+    $pullrequests.each do |pull|
+        pull.files.each do |file|
+            $all_modified_files.push(file)
+        end
+    end
+end
 
-puts pullrequests[0].files[0].patches
+gather_modified_files()
 
-commitfile = CommitFile.new "valami", Array.new, Array.new
+puts $all_modified_files[0].filename
