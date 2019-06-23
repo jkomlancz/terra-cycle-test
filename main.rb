@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'json'
-require_relative "githubclient"
-require_relative "commitfile"
-require_relative "helper"
-require_relative "pullrequest"
+require_relative "logic/githubclient"
+require_relative "logic/commitfile"
+require_relative "logic/helper"
+require_relative "logic/pullrequest"
 
 class GithubCommitChecker
     $all_modified_files = Array.new
