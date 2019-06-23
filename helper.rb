@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'json'
+require_relative "commitfile"
+
 class Helper
     def self.filter_modified_rows( patch )
         if patch.to_s.empty? then
@@ -27,5 +31,9 @@ class Helper
             counter += 1
         end
         return patches
+    end
+
+    def self.convert_to_file( json, url )
+        return json.map { |f| CommitFile.new(f['sha'], f['filename'], Helper.filter_modified_rows(f['patch']), url) }
     end
 end

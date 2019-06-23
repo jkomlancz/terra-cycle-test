@@ -7,7 +7,7 @@ class GitHubClient
 
     def initialize( user, repo )
         if user.empty? || repo.empty? then
-            @repo_url = "https://api.github.com/repos/jkomlancz/ruby-test"
+            @repo_url = "https://api.github.com/repos/jkomlancz/terra-cycle-test-repo"
         else
             @repo_url = "https://api.github.com/repos/" + user + "/" + repo
         end

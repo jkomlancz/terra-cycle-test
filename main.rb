@@ -8,7 +8,7 @@ require_relative "pullrequest"
 puts "Welcome!"
 
 # TODO: Be lehetne kerni milyen repon szeretnenk futtatni
-$ghc = GitHubClient.new "jkomlancz", "terra-cycle-test-repo"
+$ghc = GitHubClient.new "", ""
 
 $pulls = $ghc.get_pulls
 
@@ -19,13 +19,13 @@ $pullrequests = $pulls.map { |pu| PullRequest.new(
     pu['number'],
     pu['commits_url'],
     # files
-    $ghc.get_pull_files(pu['url']).map { |f| CommitFile.new(f['sha'], f['filename'], Helper.filter_modified_rows(f['patch']), "") }
+    Helper.convert_to_file($ghc.get_pull_files(pu['url']), "")
     ) }
 
 def gather_modified_files
     $pullrequests.each do |pull|
         $ghc.get_call(pull.commits).each do |commit|
-            files = $ghc.get_call(commit['url'])['files'].map { |f| CommitFile.new(f['sha'], f['filename'], Helper.filter_modified_rows(f['patch']), commit['html_url']) }
+            files = Helper.convert_to_file($ghc.get_call(commit['url'])['files'], commit["html_url"])
             files.each do |file|
                 exists = false
                 if $all_modified_files.length == 0 then
