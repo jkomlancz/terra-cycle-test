@@ -37,6 +37,16 @@ class Helper
         return json.map { |f| CommitFile.new(f['sha'], f['filename'], Helper.filter_modified_rows(f['patch']), url) }
     end
 
+    def self.convert_to_pull_request( json, ghc)
+        json.map { |pu| PullRequest.new(
+            pu['url'],
+            pu['number'],
+            pu['commits_url'],
+            # files
+            Helper.convert_to_file(ghc.get_pull_files(pu['url']), "")
+            ) }
+    end
+
     def self.get_user_from_arg( input_array )
         if input_array.include? "-u" then
             return input_array[input_array.index("-u") + 1]

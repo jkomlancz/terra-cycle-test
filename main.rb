@@ -5,55 +5,55 @@ require_relative "commitfile"
 require_relative "helper"
 require_relative "pullrequest"
 
-puts "Welcome!"
+class GithubCommitChecker
+    $all_modified_files = Array.new
 
-$ghc = GitHubClient.new Helper.get_user_from_arg(ARGV), Helper.get_repo_from_arg(ARGV)
-
-$pulls = $ghc.get_pulls
-
-$all_modified_files = Array.new
-
-$pullrequests = $pulls.map { |pu| PullRequest.new(
-    pu['url'],
-    pu['number'],
-    pu['commits_url'],
-    # files
-    Helper.convert_to_file($ghc.get_pull_files(pu['url']), "")
-    ) }
-
-def gather_modified_files
-    $pullrequests.each do |pull|
-        $ghc.get_call(pull.commits).each do |commit|
-            files = Helper.convert_to_file($ghc.get_call(commit['url'])['files'], commit["html_url"])
-            files.each do |file|
-                exists = false
-                if $all_modified_files.length == 0 then
-                    $all_modified_files.push(file)
-                else
-                    counter = 0
-                    while counter < $all_modified_files.length do
-                        rf = $all_modified_files[counter]
-                        if rf.equals(file) && !(rf.urls.include? file.urls[0]) then
-                            rf.urls.push(file.urls[0])
-                            exists = true
-                        end
-                        counter += 1
-                    end
-                    if !exists
+    def self.gather_modified_files
+        $pullrequests.each do |pull|
+            $ghc.get_call(pull.commits).each do |commit|
+                files = Helper.convert_to_file($ghc.get_call(commit['url'])['files'], commit["html_url"])
+                files.each do |file|
+                    exists = false
+                    if $all_modified_files.length == 0 then
                         $all_modified_files.push(file)
+                    else
+                        counter = 0
+                        while counter < $all_modified_files.length do
+                            rf = $all_modified_files[counter]
+                            if rf.equals(file) && !(rf.urls.include? file.urls[0]) then
+                                rf.urls.push(file.urls[0])
+                                exists = true
+                            end
+                            counter += 1
+                        end
+                        if !exists
+                            $all_modified_files.push(file)
+                        end
                     end
                 end
             end
         end
     end
-end
 
-# pull.files.each do |file|
+    def self.show_result
+        $all_modified_files.each do |file|
+            if file.urls.length > 1 then
+                file.print_it
+            end
+        end
+    end
 
-gather_modified_files()
+    def self.run
+        puts "Welcome!"
+        $ghc = GitHubClient.new Helper.get_user_from_arg(ARGV), Helper.get_repo_from_arg(ARGV)
+        $pulls = $ghc.get_pulls
+        $pullrequests = Helper.convert_to_pull_request($pulls, $ghc)
 
-$all_modified_files.each do |file|
-    if file.urls.length > 1 then
-        file.print_it
+        gather_modified_files()
+
+        show_result()
+
     end
 end
+
+GithubCommitChecker.run()
