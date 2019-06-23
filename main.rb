@@ -39,6 +39,7 @@ class GithubCommitChecker
         $all_modified_files.each do |file|
             if file.urls.length > 1 then
                 file.print_it
+                # puts file.to_json
             end
         end
     end
