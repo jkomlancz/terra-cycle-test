@@ -8,7 +8,7 @@ require_relative "pullrequest"
 puts "Welcome!"
 
 # TODO: Be lehetne kerni milyen repon szeretnenk futtatni
-$ghc = GitHubClient.new "", ""
+$ghc = GitHubClient.new Helper.get_user_from_arg(ARGV), Helper.get_repo_from_arg(ARGV)
 
 $pulls = $ghc.get_pulls
 

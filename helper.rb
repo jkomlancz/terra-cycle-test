@@ -36,4 +36,20 @@ class Helper
     def self.convert_to_file( json, url )
         return json.map { |f| CommitFile.new(f['sha'], f['filename'], Helper.filter_modified_rows(f['patch']), url) }
     end
+
+    def self.get_user_from_arg( input_array )
+        if input_array.include? "-u" then
+            return input_array[input_array.index("-u") + 1]
+        else
+            return ""
+        end
+    end
+
+    def self.get_repo_from_arg( input_array )
+        if input_array.include? "-r" then
+            return input_array[input_array.index("-r") + 1]
+        else
+            return ""
+        end
+    end
 end
