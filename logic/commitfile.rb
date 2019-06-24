@@ -48,9 +48,9 @@ class CommitFile
 
     def to_json
         json = {
-            "filename" => @filename,
-            "urls" => @urls,
-            "patches" => @patches
+            :filename => @filename,
+            :urls => @urls,
+            :patches => @patches
         }
     end
 end
