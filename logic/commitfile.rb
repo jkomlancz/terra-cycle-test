@@ -45,4 +45,12 @@ class CommitFile
         puts "URLs: ", @urls
         puts "Patches: ", @patches
     end
+
+    def to_json
+        json = {
+            :filename => @filename,
+            :urls => @urls,
+            :patches => @patches
+        }
+    end
 end

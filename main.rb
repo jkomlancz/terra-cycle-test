@@ -4,6 +4,7 @@ require_relative "logic/githubclient"
 require_relative "logic/commitfile"
 require_relative "logic/helper"
 require_relative "logic/pullrequest"
+require "awesome_print"
 
 class GithubCommitChecker
     $all_modified_files = Array.new
@@ -35,12 +36,15 @@ class GithubCommitChecker
         end
     end
 
-    def self.show_result
+    def self.show_same_row_diff_result
+        result = Array.new
         $all_modified_files.each do |file|
             if file.urls.length > 1 then
-                file.print_it
+                # file.print_it
+                result.push(file.to_json)
             end
         end
+        ap result
     end
 
     def self.run
@@ -51,9 +55,9 @@ class GithubCommitChecker
 
         gather_modified_files()
 
-        show_result()
+        show_same_row_diff_result()
 
     end
 end
 
-GithubCommitChecker.run()
+GithubCommitChecker.run
