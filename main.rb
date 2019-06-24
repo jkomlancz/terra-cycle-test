@@ -1,10 +1,11 @@
 require 'rubygems'
 require 'json'
+require 'io/console'
+require "awesome_print"
 require_relative "logic/githubclient"
 require_relative "logic/commitfile"
 require_relative "logic/helper"
 require_relative "logic/pullrequest"
-require "awesome_print"
 
 class GithubCommitChecker
     $all_modified_files = Array.new
@@ -44,12 +45,28 @@ class GithubCommitChecker
                 result.push(file.to_json)
             end
         end
+        print "\nSame line modifier commits number: " + result.length.to_s + "\n"
         ap result
     end
 
     def self.run
         puts "Welcome!"
-        $ghc = GitHubClient.new Helper.get_user_from_arg(ARGV), Helper.get_repo_from_arg(ARGV)
+
+        use_auth_mode = Helper.use_auth_mode(ARGV)
+
+        if use_auth_mode then
+          puts "Enter your Github username: "
+          username = STDIN.gets.chomp
+          puts "Enter your Github password: "
+          password = IO::console.getpass
+        else
+          username = ""
+          password = ""
+        end
+
+        $ghc = GitHubClient.new(:user => Helper.get_user_from_arg(ARGV), :repo => Helper.get_repo_from_arg(ARGV), :username => username.to_s, :password => password.to_s, :use_auth => use_auth_mode)
+
+        puts "Getting pulls"
         $pulls = $ghc.get_pulls
         $pullrequests = Helper.convert_to_pull_request($pulls, $ghc)
 

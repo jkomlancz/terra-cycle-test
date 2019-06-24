@@ -55,6 +55,10 @@ class Helper
         end
     end
 
+    def self.use_auth_mode( input_array )
+        return input_array.include? "-auth"
+    end
+
     def self.get_repo_from_arg( input_array )
         if input_array.include? "-r" then
             return input_array[input_array.index("-r") + 1]
