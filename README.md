@@ -1,6 +1,7 @@
 # Required GEM(s)
-    json
-    rest-client
+    gem install json
+    gem install rest-client
+    gem install awesome_print
 # Run
 ### Default
 You can check de default (rails/rails) repository
