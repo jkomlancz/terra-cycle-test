@@ -68,6 +68,7 @@ class GithubCommitChecker
 
         puts "Getting pulls"
         $pulls = $ghc.get_pulls
+        puts "\nCheck commits"
         $pullrequests = Helper.convert_to_pull_request($pulls, $ghc)
 
         gather_modified_files()
