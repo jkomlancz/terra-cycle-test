@@ -1,8 +1,6 @@
 
 
 class CommitFile
-    # attr_reader :filename, :patches, :urls
-
     def initialize( sha, filename, patches, urls )
         @sha = sha
         @filename = filename

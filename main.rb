@@ -10,8 +10,8 @@ require_relative "logic/pullrequest"
 class GithubCommitChecker
     $all_modified_files = Array.new
 
-    def self.gather_modified_files
-        $pullrequests.each do |pull|
+    def self.gather_modified_files( pullrequests )
+        pullrequests.each do |pull|
             $ghc.get_call(pull.commits).each do |commit|
                 files = Helper.convert_to_file($ghc.get_call(commit['url'])['files'], commit["html_url"])
                 files.each do |file|
@@ -41,7 +41,6 @@ class GithubCommitChecker
         result = Array.new
         $all_modified_files.each do |file|
             if file.urls.length > 1 then
-                # file.print_it
                 result.push(file.to_json)
             end
         end
@@ -71,7 +70,7 @@ class GithubCommitChecker
         puts "\nCheck commits"
         $pullrequests = Helper.convert_to_pull_request($pulls, $ghc)
 
-        gather_modified_files()
+        gather_modified_files( $pullrequests )
 
         show_same_row_diff_result()
 

@@ -13,11 +13,14 @@ class Helper
         is_new_patch = false
         counter = 0
 
+        # check which rows has been modified
         patch.each_char do |c|
+            # check @@ in char array | modified mark starts
             if c == "@" && patch[counter + 1] == "@" && !is_new_patch then
                 is_new_patch = true
                 new_patch << c
 
+            # check @@ in char array | modified mark ends
             elsif c == "@" && patch[counter + 1] == "@" && is_new_patch then
                 is_new_patch = false
                 new_patch << c

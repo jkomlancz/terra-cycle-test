@@ -7,8 +7,10 @@ class GitHubClient
 
     def initialize( params = {})
         if params.fetch(:user).empty? || params.fetch(:repo).empty? then
+            # Default repo
             @repo_url = "https://api.github.com/repos/rails/rails"
         else
+            # Custom repo
             @repo_url = "https://api.github.com/repos/" + params.fetch(:user) + "/" + params.fetch(:repo)
         end
         @username = params.fetch(:username)
