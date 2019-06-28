@@ -19,9 +19,20 @@ class GitHubClient
     end
 
     def get_pulls
-        url = @repo_url + "/pulls"
-        response = get_request(url)
-        return JSON.parse(response)
+        url = @repo_url + "/pulls?page="
+        $pages = 1
+        $response = "[]"
+        $result = Array.new
+        while ($pages < 2) || ($response != "[]") do
+          print "."
+          if $response != [] then
+            $result = $result + JSON.parse($response)
+          end
+          actual_url = url + $pages.to_s
+          $response = get_request(actual_url)
+          $pages = $pages + 1
+        end
+        return $result
     end
 
     def get_call( url )

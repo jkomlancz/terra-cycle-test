@@ -30,6 +30,9 @@ class CommitFile
     end
 
     def exists_patch( patches )
+      if patches.nil? || patches.empty? then
+        return false
+      end
         patches.each do |p|
             if @patches.include? p
                 return true
