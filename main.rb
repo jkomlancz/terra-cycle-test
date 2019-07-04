@@ -50,7 +50,7 @@ class GithubCommitChecker
 
     def self.run
         puts "Welcome!"
-
+        start = Time.new
         use_auth_mode = Helper.use_auth_mode(ARGV)
 
         if use_auth_mode then
@@ -73,6 +73,13 @@ class GithubCommitChecker
         gather_modified_files( $pullrequests )
 
         show_same_row_diff_result()
+
+        ended = Time.new
+
+        puts "Started: #{start.hour}:#{start.min}:#{start.sec}"
+        puts "Ended: #{ended.hour}:#{ended.min}:#{ended.sec}"
+        diff = ended - start
+        puts "Running: #{diff.round} sec"
 
     end
 end
